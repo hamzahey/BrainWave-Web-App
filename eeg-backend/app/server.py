@@ -2,11 +2,15 @@ from flask import Flask, request, jsonify
 import wfdb
 import os
 from flask_cors import CORS
+from inference_utils import load_model, run_inference
 
 app = Flask(__name__)
 CORS(app)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+model_path = "./eeg_model.pth"
+model = load_model(model_path)
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
@@ -34,6 +38,19 @@ def upload_file():
         fs = record.fs  # Sampling frequency
 
         return jsonify({"fs": fs, "eeg_data": signal})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/infer", methods=["POST"])
+def infer():
+    try:
+        data = request.json
+        root_dir = data.get("directory_path")
+
+        test_preds = run_inference(model, root_dir)
+
+        return jsonify({"test_preds": test_preds})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
