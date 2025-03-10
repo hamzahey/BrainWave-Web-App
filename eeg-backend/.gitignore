@@ -1,0 +1,7 @@
+/__pycache__
+/myenv
+
+# Ignore general files
+*.env
+*.log
+*.tmp
