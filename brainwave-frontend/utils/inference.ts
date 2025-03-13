@@ -9,7 +9,7 @@ export async function fetchInferenceResults(directoryPath: string) {
     if (data.error) {
       throw new Error(data.error);
     }
-  
+    
     return data.test_preds;
   }
   
