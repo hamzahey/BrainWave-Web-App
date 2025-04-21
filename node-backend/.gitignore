@@ -1,0 +1,57 @@
+# Dependency directories
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# TypeScript output directory
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE/Editor directories
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# MongoDB data directory if running locally
+data/db/
+
+# Temporary files directory
+tmp/
+
+# Uploaded files/EEG data
+uploads/
+raw_data/
