@@ -39,7 +39,12 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
         const accessToken = tokenService.generateAccessToken(newUser._id as Types.ObjectId, newUser.role);
         const refreshToken = tokenService.generateRefreshToken(newUser._id as Types.ObjectId, newUser.role);
 
+        
+
         await tokenService.storeRefreshToken(newUser._id as Types.ObjectId, refreshToken);
+        
+        tokenService.setCookies(res, accessToken, refreshToken);
+
         await User.findByIdAndUpdate(newUser._id, { lastLogin: new Date() });
 
         res.status(201).json({
@@ -56,8 +61,10 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
                 refreshToken
             }
         });
+        return;
     } catch (error) {
         res.status(500).json({ message: 'Registration failed', error: (error as Error).message });
+        return;
     }
 };
 
@@ -115,8 +122,10 @@ const registerDoctor = async (req: Request, res: Response, next: NextFunction): 
                 hospitalName
             }
         });
+        return;
     } catch (error) {
         res.status(500).json({ message: 'Doctor registration failed', error: (error as Error).message });
+        return;
     }
 };
 
@@ -146,6 +155,13 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
         const refreshToken = tokenService.generateRefreshToken(user._id as Types.ObjectId, user.role);
 
         await tokenService.storeRefreshToken(user._id as Types.ObjectId, refreshToken);
+
+        tokenService.setCookies(res, accessToken, refreshToken);
+
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true, 
+        });
+
         await User.findByIdAndUpdate(user._id, { lastLogin: new Date() });
 
         res.status(200).json({
@@ -162,8 +178,10 @@ const login = async (req: Request, res: Response, next: NextFunction): Promise<v
                 refreshToken
             }
         });
+        return;
     } catch (error) {
         res.status(500).json({ message: 'Login failed', error: (error as Error).message });
+        return;
     }
 };
 
@@ -190,19 +208,23 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction): Pr
 
         await tokenService.storeRefreshToken(user._id as Types.ObjectId, newRefreshToken);
 
+        tokenService.setCookies(res, newAccessToken, newRefreshToken);
+
         res.status(200).json({
             accessToken: newAccessToken,
             refreshToken: newRefreshToken
         });
+        return;
     } catch (error) {
         res.status(401).json({ message: 'Token refresh failed', error: (error as Error).message });
+        return;
     }
 };
 
 // Logout
-const logout = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const logout = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { refreshToken } = req.body;
+        const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
         if (!refreshToken) {
             res.status(400).json({ message: 'Refresh Token Required' });
@@ -215,16 +237,54 @@ const logout = async (req: Request, res: Response, next: NextFunction): Promise<
             await tokenService.removeRefreshToken(user._id as Types.ObjectId);
         }
 
+        tokenService.clearCookies(res);
+
         res.status(200).json({ message: 'Logout Successful' });
+        return;
     } catch (error) {
         res.status(500).json({ message: 'Logout failed', error: (error as Error).message });
+        return;
     }
 };
+
+
+const checkAuth = async (req: Request, res: Response): Promise<void> => {
+    try {
+        
+        if(!req.user){
+            res.status(401).json({authnticated: false});
+            return; 
+        }
+
+        const user = await User.findById(req.user.userId).select('-password -refreshToken');
+
+        if(!user){
+            res.status(401).json({authnticated: false});
+            return;
+        }
+
+        res.status(200).json({
+            authenticated: true,
+            user: {
+              id: user._id,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              role: user.role
+            }
+          });
+          return;
+    } catch (error) {
+        res.status(500).json({ message: 'Authentication auth failed', error: (error as Error).message });
+        return;
+    }
+}
 
 export default {
     register,
     registerDoctor,
     login,
     refreshToken,
-    logout
+    logout,
+    checkAuth
 };

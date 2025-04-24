@@ -18,5 +18,13 @@ export default {
     },
     server: {
         port: process.env.PORT
-    }
+    },
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'none' as 'none',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        domain: process.env.COOKIE_DOMAIN || undefined,
+    },
+    clientUrl: 'http://localhost:3000',
 }

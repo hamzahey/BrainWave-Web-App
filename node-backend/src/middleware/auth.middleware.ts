@@ -16,17 +16,20 @@ declare global {
 
 const authenticate = (req: Request, res: Response, next: NextFunction): void => {
     try {
-        const authHeader = req.headers.authorization;
 
-        if (!authHeader || !authHeader.startsWith('Bearer')) {
-            res.status(401).json({message: 'Authentication Required'})
-            return
-        }
-
-        const token = authHeader.split(" ")[1];
+        let token = req.cookies.accessToken;
 
         if (!token) {
-            res.status(401).json({message: 'Access Token is Required'})
+            const authHeader = req.headers.authorization;
+
+            if (authHeader && authHeader.startsWith('Bearer')) {
+                token = authHeader.split(" ")[1];
+            }
+        }
+
+
+        if (!token) {
+            res.status(401).json({message: 'Authentication Required'})
             return
         }
 
