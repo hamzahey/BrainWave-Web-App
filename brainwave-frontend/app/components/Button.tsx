@@ -1,20 +1,26 @@
-import React from "react";
 
-interface ButtonProps {
+
+import React, { ButtonHTMLAttributes } from 'react';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  type?: "button" | "submit" | "reset";
-  fullWidth?: boolean;
-  onClick?: () => void;
+  fullWidth?: boolean; // Optional fullWidth prop
 }
 
-const Button: React.FC<ButtonProps> = ({ children, type = "button", fullWidth, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ 
+  children, 
+  className = '', 
+  disabled = false,
+  fullWidth = false,
+  ...props 
+}) => {
   return (
     <button
-      type={type}
-      onClick={onClick}
       className={`px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition ${
-        fullWidth ? "w-full" : ""
-      }`}
+        fullWidth ? 'w-full' : ''
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      disabled={disabled}
+      {...props}
     >
       {children}
     </button>

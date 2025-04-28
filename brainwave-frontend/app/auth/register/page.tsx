@@ -1,59 +1,177 @@
-"use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+'use client';
 
-const users = [
-  { name: "Hamza Khurshid", email: "hamza@gmail.com", password: "new123" },
-  { name: "John Doe", email: "john@example.com", password: "password123" },
-];
+import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import Link from 'next/link';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
 
-const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const router = useRouter();
+export default function Register() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    dateOfBirth: '',
+    gender: 'male', // Default value
+  });
+  const [error, setError] = useState('');
+  const { register, loading } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 
-    const userExists = users.some((user) => user.email === email);
-    if (userExists) {
-      alert("User already exists. Please login.");
-      return;
+    try {
+      // Remove confirmPassword before sending to API
+      const { confirmPassword, ...registerData } = formData;
+      await register(registerData);
+    } catch (error) {
+      setError((error as Error).message || 'Registration failed');
     }
-
-    users.push({ name, email, password });
-    alert("Registration successful! Redirecting to dashboard...");
-    router.push("/dashboard");
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-xl">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input label="Full Name" type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter your full name" />
-          <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
-          <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Create a password" />
-          <Input label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm your password" />
-          <div className="text-sm text-center">
-            <span className="text-black">Already have an account?</span> <Link href="/login" className="text-blue-500 hover:underline">Login here</Link>
+    <div className="flex items-center justify-center min-h-screen bg-white py-8">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center mb-6 text-black">Create an Account</h1>
+        
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+            {error}
           </div>
-          <Button type="submit" fullWidth>Register</Button>
+        )}
+        
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <Input
+              label="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+            
+            <Input
+              label="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Input
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+          </div>
+          
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <Input
+              label="Password"
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+            
+            <Input
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Input
+              label="Phone Number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+          </div>
+          
+          <div className="mb-4">
+            <Input
+              label="Date of Birth"
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+          </div>
+          
+          <div className="mb-6">
+            <label className="block text-black text-sm font-bold mb-2">
+              Gender
+            </label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              required
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? 'Registering...' : 'Register'}
+          </Button>
         </form>
+        
+        <div className="mt-4 text-center">
+          <p className="text-black">
+            Already have an account?{' '}
+            <Link href="/auth/login" className="text-blue-600 hover:underline">
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
-};
-
-export default Register;
+}
