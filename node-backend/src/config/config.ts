@@ -22,9 +22,10 @@ export default {
     cookie: {
         httpOnly: true,
         secure: false,
-        sameSite: 'none' as 'none',
+        sameSite: 'lax' as 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000,
         domain: process.env.COOKIE_DOMAIN || undefined,
+        path: '/', // Make sure this is set
     },
     clientUrl: 'http://localhost:3000',
 }

@@ -37,11 +37,14 @@ const setCookies = (res: Response, accessToken: string, refreshToken: string): v
     // Set access token cookie
     res.cookie('accessToken', accessToken, {
       ...config.cookie,
-      maxAge: parseInt(config.jwt.accessTokenExpiry) * 60 * 1000 // Convert minutes to milliseconds
+      maxAge: 60 * 60 * 1000 // Convert minutes to milliseconds
     });
   
     // Set refresh token cookie
-    res.cookie('refreshToken', refreshToken, config.cookie);
+    res.cookie('refreshToken', refreshToken, {
+        ...config.cookie,
+        maxAge: 7 * 24 * 60 * 60 * 1000 // Convert days to milliseconds
+    });
 };
 
 const clearCookies = (res: Response): void => {

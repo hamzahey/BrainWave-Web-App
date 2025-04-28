@@ -6,14 +6,14 @@ import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
-export default function Dashboard() {
+export default function Landing() {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     // If not authenticated and not loading, redirect to login
     if (!loading && !isAuthenticated) {
-      router.push('/auth/login');
+      // router.push('/auth/login');
     }
   }, [loading, isAuthenticated, router]);
 

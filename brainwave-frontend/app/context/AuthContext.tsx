@@ -5,7 +5,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '../utils/auth.service';
-import Link from 'next/link';
 
 interface User {
   id: string;
@@ -50,6 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(null);
       }
     } catch (error) {
+      // setUser(null);
+      // setIsAuthenticated(false);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userData = await authService.login(email, password);
       setUser(userData);
       setIsAuthenticated(true);
-      router.push('/dashboard');
+      // router.push('/dashboard');
     } catch (error) {
       throw error;
     } finally {
@@ -89,15 +90,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       await authService.logout();
-      setUser(null);
-      setIsAuthenticated(false);
-      router.push('/auth/login');
     } catch (error) {
       console.error('Logout error:', error);
+      // Even if API logout fails, we still need to clear client-side auth
     } finally {
+      setUser(null);
+      setIsAuthenticated(false);
       setLoading(false);
+      router.push('/auth/login');
     }
   };
+  
 
   return (
     <AuthContext.Provider

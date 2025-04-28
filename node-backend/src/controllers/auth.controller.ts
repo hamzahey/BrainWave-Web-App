@@ -224,24 +224,27 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction): Pr
 // Logout
 const logout = async (req: Request, res: Response): Promise<void> => {
     try {
+        console.log("Cookies received:", req?.cookies);
+        console.log("Body received:", req?.body);
+
         const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
         if (!refreshToken) {
-            res.status(400).json({ message: 'Refresh Token Required' });
-            return;
+            const user = await tokenService.findUserByRefreshToken(refreshToken);
+
+            if (user) {
+                await tokenService.removeRefreshToken(user._id as Types.ObjectId);
+            }
         }
 
-        const user = await tokenService.findUserByRefreshToken(refreshToken);
-
-        if (user) {
-            await tokenService.removeRefreshToken(user._id as Types.ObjectId);
-        }
 
         tokenService.clearCookies(res);
 
         res.status(200).json({ message: 'Logout Successful' });
         return;
     } catch (error) {
+
+        console.error('Logout error:', error);
         res.status(500).json({ message: 'Logout failed', error: (error as Error).message });
         return;
     }

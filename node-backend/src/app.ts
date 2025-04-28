@@ -11,8 +11,10 @@ const app: Application = express();
 
 // Make sure this is before any routes
 app.use(cors({
-    origin: true, // Allow any origin but respect the Origin header
-    credentials: true
+    origin: config.clientUrl, // Your frontend URL
+    credentials: true, // Critical for cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Add this line after CORS configuration

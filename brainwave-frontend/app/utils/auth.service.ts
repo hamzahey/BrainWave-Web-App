@@ -64,10 +64,16 @@ interface User {
     },
   
     async logout(): Promise<void> {
-      await fetch(`${API_URL}/auth/logout`, {
+      const response = await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
         credentials: 'include', // Important for cookies
       });
+
+      if (!response.ok) {
+        // Handle error if the response is not OK (status 200-299)
+        const data = await response.json();
+        throw new Error(data.message || 'Logout failed');
+      }
     },
   
     async checkAuthStatus(): Promise<{ authenticated: boolean; user?: User }> {
