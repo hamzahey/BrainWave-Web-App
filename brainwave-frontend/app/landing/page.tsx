@@ -28,11 +28,11 @@ export default function Landing() {
   return (
     <div className="p-6">
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-4">Welcome to your Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-4 text-black">Welcome to your Dashboard</h1>
         
         {user && (
           <div className="mb-6">
-            <p className="text-lg">
+            <p className="text-lg text-black">
               Hello, {user.firstName} {user.lastName}!
             </p>
             <p className="text-gray-600">Email: {user.email}</p>
