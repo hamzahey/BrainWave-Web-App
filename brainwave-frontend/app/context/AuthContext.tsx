@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(authenticated);
       if (authenticated && user) {
         setUser(user);
-        router.push('/dashboard');
+        // router.push('/dashboard');
       } else {
         setUser(null);
       }
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userData = await authService.login(email, password);
       setUser(userData);
       setIsAuthenticated(true);
-      // router.push('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       throw error;
     } finally {

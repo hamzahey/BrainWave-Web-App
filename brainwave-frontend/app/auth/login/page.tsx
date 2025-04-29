@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -10,7 +11,14 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const { login, loading } = useAuth();
+  const { login, loading, isAuthenticated } = useAuth();
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [loading, isAuthenticated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

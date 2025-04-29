@@ -1,8 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useEffect ,useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -19,7 +20,14 @@ export default function Register() {
     gender: 'male', // Default value
   });
   const [error, setError] = useState('');
-  const { register, loading } = useAuth();
+  const { register, loading, isAuthenticated } = useAuth();
+  const router = useRouter()
+
+  useEffect(()=>{
+    if(!loading && isAuthenticated){
+      router.push('/dashboard')
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

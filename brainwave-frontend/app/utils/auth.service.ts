@@ -81,7 +81,11 @@ interface User {
         const response = await fetch(`${API_URL}/auth/check`, {
           credentials: 'include', // Important for cookies
         });
-  
+        
+        if (response.status === 401) {
+          return { authenticated: false };
+        }
+
         if (!response.ok) {
           return { authenticated: false };
         }

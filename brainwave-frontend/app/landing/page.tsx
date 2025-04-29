@@ -1,4 +1,4 @@
-// app/dashboard/page.tsx
+// app/landing/page.tsx
 
 'use client';
 
@@ -13,7 +13,7 @@ export default function Landing() {
   useEffect(() => {
     // If not authenticated and not loading, redirect to login
     if (!loading && !isAuthenticated) {
-      // router.push('/auth/login');
+      router.push('/auth/login');
     }
   }, [loading, isAuthenticated, router]);
 
