@@ -71,6 +71,7 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
 // Register Doctor (Admin only)
 const registerDoctor = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+        console.log("Admin Info: ", req.user);
         if (!req.user || req.user.role !== UserRole.ADMIN) {
             res.status(403).json({ message: 'Unauthorized: Only Admin can register Doctors' });
             return;
@@ -84,6 +85,12 @@ const registerDoctor = async (req: Request, res: Response, next: NextFunction): 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             res.status(409).json({ message: 'User already exists' });
+            return;
+        }
+
+        const existingDoctor = await Doctor.findOne({ registrationNumber });
+        if (existingDoctor) {
+            res.status(409).json({ message: `Doctor with registration number ${registrationNumber} already exists` });
             return;
         }
 
@@ -124,6 +131,7 @@ const registerDoctor = async (req: Request, res: Response, next: NextFunction): 
         });
         return;
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: 'Doctor registration failed', error: (error as Error).message });
         return;
     }

@@ -19,6 +19,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (userData: any) => Promise<void>;
+  registerDoctor: (doctorData: any) => Promise<void>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -44,13 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(authenticated);
       if (authenticated && user) {
         setUser(user);
-        // router.push('/dashboard');
       } else {
         setUser(null);
       }
     } catch (error) {
-      // setUser(null);
-      // setIsAuthenticated(false);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -86,6 +84,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const registerDoctor = async (doctorData: any) => {
+    setLoading(true);
+    try {
+      // Only admins should be able to register doctors
+      if (!user || user.role !== 'admin') {
+        throw new Error('Unauthorized: Only admin can register doctors');
+      }
+      
+      await authService.registerDoctor(doctorData);
+      // No need to update current user or authentication state
+      // since the admin remains logged in
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = async () => {
     setLoading(true);
     try {
@@ -101,7 +117,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
   
-
   return (
     <AuthContext.Provider
       value={{
@@ -109,6 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         login,
         register,
+        registerDoctor,
         logout,
         isAuthenticated,
       }}
