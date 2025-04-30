@@ -150,10 +150,82 @@ const getDoctorByRegistrationNumber = async (req: Request, res: Response): Promi
     }
 }
 
+const deletePatientById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        if (!req.user || req.user.role !== UserRole.ADMIN) {
+            res.status(403).json({ message: 'Unauthorized: Only Admin can access this resource' });
+            return;
+        }
+
+        const { patientId } = req.params;
+
+        const patient = await Patient.findOne({ patientId }).populate('userId');
+
+        if (!patient) {
+            res.status(404).json({ message: 'Patient not found' });
+            return;
+        }
+
+        await Patient.deleteOne({ patientId });
+
+        await User.deleteOne({ _id: (patient.userId as Types.ObjectId) });
+
+        await User.deleteOne({ _id: patient.userId });
+
+        res.status(200).json({ 
+            message: 'Patient deleted successfully',
+            deletedPatientId: patientId
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to delete patient',
+            error: (error as Error).message
+        });
+    }
+}
+
+
+const deleteDoctorByRegistration = async (req: Request, res: Response): Promise<void> => {
+    try {
+        if (!req.user || req.user.role !== UserRole.ADMIN) {
+            res.status(403).json({ message: 'Unauthorized: Only Admin can access this resource' });
+            return;
+        }
+
+        const { registrationNumber } = req.params;
+
+        const doctor = await Doctor.findOne({ registrationNumber });
+
+        if (!doctor) {
+            res.status(404).json({ message: 'Doctor not found' });
+            return;
+        }
+
+        await Doctor.deleteOne({ registrationNumber });
+
+        await User.deleteOne({ _id: (doctor.userId as Types.ObjectId) });
+
+        res.status(200).json({
+            message: 'Doctor deleted successfully',
+            deletedDoctorRegistrationNumber: registrationNumber
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: 'Failed to delete doctor',
+            error: (error as Error).message
+        });
+    }
+}
+
+
 
 export default {
     getAllPatients,
     getPatientById,
     getAllDoctors,
-    getDoctorByRegistrationNumber
+    getDoctorByRegistrationNumber,
+    deletePatientById,
+    deleteDoctorByRegistration
 };

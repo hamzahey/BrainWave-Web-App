@@ -33,4 +33,16 @@ router.get('/doctor/:registrationNumber',
     adminController.getDoctorByRegistrationNumber
   );
 
+router.delete('/patient/:patientId', 
+    authMiddleware.authenticate, 
+    roleMiddleware.authorize(UserRole.ADMIN), 
+    adminController.deletePatientById
+  );
+
+  router.delete('/doctor/:registrationNumber', 
+    authMiddleware.authenticate, 
+    roleMiddleware.authorize(UserRole.ADMIN), 
+    adminController.deleteDoctorByRegistration
+);
+
 export default router;
