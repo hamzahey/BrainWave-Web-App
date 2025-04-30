@@ -28,6 +28,11 @@ const patientSchema = new Schema<IPatient>({
         ref: 'User',
         required: true
     },
+    patientId: {
+        type: String,
+        unique: true,
+        required: true
+    },
     dateOfBirth: Date,
     gender: String,
     address: addressSchema,

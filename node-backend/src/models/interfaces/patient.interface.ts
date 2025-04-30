@@ -22,6 +22,7 @@ export interface Address {
 
 export interface IPatient extends Document {
     userId: Types.ObjectId;
+    patientId: string;
     dateOfBirth?: Date;
     gender?: string;
     address?: Address;

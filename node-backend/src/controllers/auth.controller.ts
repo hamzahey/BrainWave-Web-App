@@ -9,9 +9,9 @@ import { UserRole } from "../models/interfaces/user.interface";
 // Register Patient
 const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const { email, password, firstName, lastName, phoneNumber, dateOfBirth, gender } = req.body;
+        const { email, password, firstName, lastName, phoneNumber, dateOfBirth, gender, patientId } = req.body;
 
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ patientId });
         if (existingUser) {
             res.status(409).json({ message: 'User already exists' });
             return;
@@ -30,6 +30,7 @@ const register = async (req: Request, res: Response, next: NextFunction): Promis
 
         const newPatient = new Patient({
             userId: newUser._id,
+            patientId,
             dateOfBirth,
             gender
         });

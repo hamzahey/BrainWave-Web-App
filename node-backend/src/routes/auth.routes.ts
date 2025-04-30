@@ -28,4 +28,6 @@ router.post('/logout', authController.logout);
 // Check authentication status
 router.get('/check', authMiddleware.authenticate, authController.checkAuth);
 
+
+
 export default router;
