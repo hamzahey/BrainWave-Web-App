@@ -15,6 +15,34 @@ interface AuthResponse {
   doctor?: any;
 }
 
+interface Patient {
+  patientId: string;
+  userDetails: {
+    _id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+  };
+  dateOfBirth: string;
+  gender: string;
+}
+
+interface Doctor {
+  registrationNumber: string;
+  userDetails: {
+    _id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+  };
+  specialization: string;
+  department: string;
+  qualifications: string[];
+  yearsOfExperience: number;
+}
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 export const authService = {
@@ -142,6 +170,86 @@ export const authService = {
       return response.ok;
     } catch (error) {
       return false;
+    }
+  },
+
+  async getAllPatients(): Promise<Patient[]> {
+    const response = await fetch(`${API_URL}/admin/patients`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to fetch patients');
+    }
+
+    const data = await response.json();
+    return data.patients;
+  },
+
+  async getPatientById(patientId: string): Promise<Patient> {
+    const response = await fetch(`${API_URL}/admin/patients/${patientId}`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Patient not found');
+    }
+
+    const data = await response.json();
+    return data.patient;
+  },
+
+  async deletePatient(patientId: string): Promise<void> {
+    const response = await fetch(`${API_URL}/admin/patients/${patientId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to delete patient');
+    }
+  },
+
+  async getAllDoctors(): Promise<Doctor[]> {
+    const response = await fetch(`${API_URL}/admin/doctors`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to fetch doctors');
+    }
+
+    const data = await response.json();
+    return data.doctors;
+  },
+
+  async getDoctorByRegistration(registrationNumber: string): Promise<Doctor> {
+    const response = await fetch(`${API_URL}/admin/doctors/${registrationNumber}`, {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Doctor not found');
+    }
+
+    const data = await response.json();
+    return data.doctor;
+  },
+
+  async deleteDoctor(registrationNumber: string): Promise<void> {
+    const response = await fetch(`${API_URL}/admin/doctors/${registrationNumber}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Failed to delete doctor');
     }
   },
 };
