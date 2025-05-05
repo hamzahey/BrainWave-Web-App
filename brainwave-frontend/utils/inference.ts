@@ -28,13 +28,29 @@ export async function fetchInferenceResults(file: File): Promise<PatientResult[]
       throw new Error("Invalid response format from server");
     }
 
-    return data.patients.map((patient: any) => ({
+    const formattedResults = data.patients.map((patient: any) => ({
       patient_id: patient.patient_id.toString(),
       outcome: patient.outcome !== undefined ? Number(patient.outcome) : undefined,
       outcome_probability: patient.outcome_probability !== undefined ? Number(patient.outcome_probability) : undefined,
       cpc: patient.cpc !== undefined ? Number(patient.cpc) : undefined,
       error: patient.error || undefined,
     }));
+
+    const analysisResponse = await fetch('http://localhost:5000/api/analysis/save', {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ patients: formattedResults }), // Wrap in patients object
+  });
+
+    if (!analysisResponse.ok) {
+      const error = await analysisResponse.json();
+      throw new Error(error.message || 'Failed to save analysis');
+    }    
+
+    return formattedResults;
 
   } catch (error) {
     if (error instanceof Error){

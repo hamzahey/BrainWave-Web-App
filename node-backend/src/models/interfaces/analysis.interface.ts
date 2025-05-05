@@ -8,18 +8,19 @@ export enum AnalysisStatus {
 }
 
 export interface AnalysisResults {
+    patientId: string;
     classification: string;
-    condidenceScore: number;
-    detectedArtifacts?: string[];
+    confidenceScore: number;
     cpcScore: number;
+    analysisDate: Date;
 }
 
 export interface IAnalysis extends Document {
-    eegDataId: Types.ObjectId;
-    processedBy: Types.ObjectId;
-    processedDate: Date;
+    patientId: string;
+    performedBy: Types.ObjectId;
     status: AnalysisStatus;
     results?: AnalysisResults;
     notes?: string;
+    createdAt: Date;
 }
 

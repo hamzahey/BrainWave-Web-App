@@ -7,6 +7,7 @@ import errorHandler from './utils/errorHandler';
 import config from './config/config';
 import authRoutes from './routes/auth.routes';
 import adminRoutes from './routes/admin.routes'
+import analysisRoutes from './routes/analysis.routes';
 
 const app: Application = express();
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/analysis', analysisRoutes);
 
 app.use(errorHandler);
 
