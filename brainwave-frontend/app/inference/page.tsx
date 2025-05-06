@@ -16,7 +16,7 @@ export default function InferencePage() {
       'application/zip': ['.zip']
     },
     multiple: false,
-    maxSize: 500 * 1024 * 1024, // 500MB
+    // maxSize: 500 * 1024 * 1024, // 500MB
     onDrop: (acceptedFiles) => {
       setFile(acceptedFiles[0]);
       setError(null);

@@ -64,11 +64,11 @@ export class AnalysisService {
     }
 
     static async getUserAnalyses(user: IUser | UserIdentifier): Promise<any[]> {
-        let query = { performedBy: user._id };
+        let query: { performedBy?: Types.ObjectId } = { performedBy: user._id as Types.ObjectId };
 
-        // if (user.role==='admin'){
-        //     query = {};
-        // }
+        if (user.role === 'admin') {
+            query = {};
+        }
 
         return Analysis.find(query)
         .populate('performedBy', 'firstName lastName role')
