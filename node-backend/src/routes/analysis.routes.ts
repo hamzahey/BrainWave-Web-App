@@ -18,4 +18,13 @@ router.get('/',
     analysisController.getAnalyses
 );
 
+router.get('/patient/:patientId', 
+  authMiddleware.authenticate,
+  analysisController.getAnalysesByPatient); // Admin + Doctor
+
+
+router.get('/doctor/:registrationNumber', 
+    authMiddleware.authenticate,
+    analysisController.getAnalysesByDoctorRegistrationNumber);
+
 export default router;

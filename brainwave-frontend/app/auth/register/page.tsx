@@ -18,6 +18,7 @@ export default function Register() {
     phoneNumber: '',
     dateOfBirth: '',
     gender: 'male', // Default value
+    patientId: '',
   });
   const [error, setError] = useState('');
   const { register, loading, isAuthenticated } = useAuth();
@@ -161,6 +162,18 @@ export default function Register() {
               <option value="other">Other</option>
             </select>
           </div>
+
+          <div className="mb-4">
+            <Input
+              label="Patient ID"
+              name="patientId"
+              value={formData.patientId}
+              onChange={handleChange}
+              required
+              className="text-black"
+            />
+          </div>
+
           
           <Button
             type="submit"

@@ -73,6 +73,7 @@ export const authService = {
     phoneNumber: string;
     dateOfBirth: string;
     gender: string;
+    patientId: string;
   }): Promise<User> {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',

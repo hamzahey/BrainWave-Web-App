@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { AnalysisService } from '../services/analysis.service';
-import { IUser } from '../models/interfaces/user.interface';
+import { IUser, UserRole } from '../models/interfaces/user.interface';
+import Patient from '../models/patient.model';
+import Analysis from '../models/analysis.model';
+import Doctor from '../models/doctor.model';
 
 
 
@@ -57,7 +60,87 @@ const getAnalyses = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
+const getAnalysesByPatient = async (req: Request, res: Response): Promise<void> => {
+    try {
+
+        if (!req.user || (req.user.role !== UserRole.ADMIN && req.user.role !== UserRole.DOCTOR)){
+            res.status(403).json({
+                message: 'Unauthorized: Only Admin and Doctors can access this resource'
+            });
+            return;
+        }
+
+        const { patientId } = req.params;
+
+        // Check if the patient exists
+        const patient = await Patient.findOne({ patientId });
+        console.log(patient);
+
+        if (!patient) {
+            res.status(404).json({
+                message: 'Patient not found'
+            });
+            return;
+        }
+
+        // Fetch all analyses related to this patientId string
+        const analyses = await Analysis.find({ performedBy: patient.userId})
+            .populate('performedBy', 'firstName lastName role') // Optional: include who performed it
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            count: analyses.length,
+            analyses
+        });
+        return 
+    } catch (error) {
+        console.error('Error in getAnalysesByPatient', error);
+        res.status(500).json({
+            message: 'Failed to fetch analyses by Patient',
+            error: (error as Error).message
+        })
+    }
+}
+
+const getAnalysesByDoctorRegistrationNumber = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { registrationNumber } = req.params;
+
+        // Only Admin can access this
+        if (!req.user || req.user.role !== UserRole.ADMIN) {
+            res.status(403).json({ message: 'Unauthorized: Only Admin can access this resource' });
+            return
+        }
+
+        const doctor = await Doctor.findOne({ registrationNumber });
+        if (!doctor) {
+            res.status(404).json({ message: 'Doctor not found' });
+            return 
+        }
+
+        const analyses = await Analysis.find({ performedBy: doctor.userId })
+            .populate('performedBy', 'firstName lastName role')
+            .sort({ createdAt: -1 });
+
+        res.status(200).json({
+            count: analyses.length,
+            analyses
+        });
+
+        return;
+    } catch (error) {
+        console.error('Error in getAnalysesByDoctorRegistrationNumber:', error);
+        res.status(500).json({
+            message: 'Failed to fetch analyses for doctor',
+            error: (error as Error).message
+        });
+    }
+};
+
+
 export default {
     saveAnalysis,
-    getAnalyses
+    getAnalyses,
+    getAnalysesByPatient,
+    getAnalysesByDoctorRegistrationNumber
 }
