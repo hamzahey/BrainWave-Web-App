@@ -27,4 +27,12 @@ router.get('/doctor/:registrationNumber',
     authMiddleware.authenticate,
     analysisController.getAnalysesByDoctorRegistrationNumber);
 
+
+router.get(
+      '/all',
+      authMiddleware.authenticate,
+      analysisController.getAllAnalyses
+    );
+    
+
 export default router;

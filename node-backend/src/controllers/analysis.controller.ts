@@ -138,9 +138,40 @@ const getAnalysesByDoctorRegistrationNumber = async (req: Request, res: Response
 };
 
 
+const getAllAnalyses = async (req: Request, res: Response): Promise<void> => {
+    try {
+        // Ensure the user is authenticated and is an Admin
+        if (!req.user || req.user.role !== UserRole.ADMIN) {
+            res.status(403).json({
+                message: 'Unauthorized: Only Admin can access this resource'
+            });
+            return;
+        }
+
+        // Fetch all analyses and populate performedBy
+        const analyses = await Analysis.find({})
+            .populate('performedBy', 'firstName lastName role') // include who performed the analysis
+            .sort({ createdAt: -1 }); // sort by most recent
+
+        res.status(200).json({
+            count: analyses.length,
+            analyses
+        });
+
+    } catch (error) {
+        console.error('Error in getAllAnalyses:', error);
+        res.status(500).json({
+            message: 'Failed to fetch all analyses',
+            error: (error as Error).message
+        });
+    }
+};
+
+
 export default {
     saveAnalysis,
     getAnalyses,
     getAnalysesByPatient,
-    getAnalysesByDoctorRegistrationNumber
+    getAnalysesByDoctorRegistrationNumber,
+    getAllAnalyses
 }
