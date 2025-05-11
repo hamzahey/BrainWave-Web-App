@@ -99,166 +99,191 @@ export default function RegisterDoctor() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white py-8">
-      <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-6 text-black">Register a Doctor</h1>
+    <div className="flex items-center justify-center min-h-screen bg-[#f8f9fa] py-8">
+      <div className="w-full max-w-2xl p-8 bg-white rounded-xl shadow-md border border-[#0b021e]/10">
+        <h1 className="text-2xl font-bold text-center mb-6 text-[#0b021e]">Register a Doctor</h1>
         
         {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200">
             {error}
           </div>
         )}
         
         <form onSubmit={handleSubmit}>
+          {/* Personal Information Section */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-black border-b pb-2 mb-4">Personal Information</h2>
+            <h2 className="text-lg font-semibold text-[#0b021e] border-b border-[#0b021e]/20 pb-2 mb-4">Personal Information</h2>
             
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <Input
-                label="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-                className="text-black"
-              />
+            <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#0b021e] mb-1">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
+                />
+              </div>
               
-              <Input
-                label="Last Name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                required
-                className="text-black"
-              />
+              <div>
+                <label className="block text-sm font-medium text-[#0b021e] mb-1">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
+                />
+              </div>
             </div>
             
             <div className="mb-4">
-              <Input
-                label="Email"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Email</label>
+              <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
             
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <Input
-                label="Password"
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="text-black"
-              />
+            <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-[#0b021e] mb-1">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
+                />
+              </div>
               
-              <Input
-                label="Confirm Password"
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                className="text-black"
-              />
+              <div>
+                <label className="block text-sm font-medium text-[#0b021e] mb-1">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
+                />
+              </div>
             </div>
             
             <div className="mb-4">
-              <Input
-                label="Phone Number"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Phone Number</label>
+              <input
+                type="tel"
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleChange}
                 required
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
           </div>
           
+          {/* Professional Information Section */}
           <div className="mb-6">
-            <h2 className="text-lg font-semibold text-black border-b pb-2 mb-4">Professional Information</h2>
+            <h2 className="text-lg font-semibold text-[#0b021e] border-b border-[#0b021e]/20 pb-2 mb-4">Professional Information</h2>
             
             <div className="mb-4">
-              <Input
-                label="Specialization"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Specialization</label>
+              <input
+                type="text"
                 name="specialization"
                 value={formData.specialization}
                 onChange={handleChange}
                 required
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
             
             <div className="mb-4">
-              <Input
-                label="Department"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Department</label>
+              <input
+                type="text"
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
                 required
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
             
             <div className="mb-4">
-              <Input
-                label="Registration Number"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Registration Number</label>
+              <input
+                type="text"
                 name="registrationNumber"
                 value={formData.registrationNumber}
                 onChange={handleChange}
                 required
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
             
             <div className="mb-4">
-              <Input
-                label="Hospital Name"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Hospital Name</label>
+              <input
+                type="text"
                 name="hospitalName"
                 value={formData.hospitalName}
                 onChange={handleChange}
                 required
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
             
             <div className="mb-4">
-              <label className="block text-black text-sm font-bold mb-2">
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">
                 Qualifications (comma-separated)
               </label>
               <textarea
                 name="qualifications"
                 value={formData.qualifications}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
                 rows={3}
                 placeholder="MBBS, MD, MS, etc."
               />
             </div>
             
             <div className="mb-4">
-              <Input
-                label="Years of Experience"
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Years of Experience</label>
+              <input
                 type="number"
                 name="yearsOfExperience"
                 value={formData.yearsOfExperience}
                 onChange={handleChange}
-                className="text-black"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
               />
             </div>
           </div>
           
-          <Button
+          <button
             type="submit"
             disabled={loading}
-            className="w-full"
+            className="w-full bg-[#0b021e] hover:bg-[#1a093a] text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-sm hover:shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {loading ? 'Registering Doctor...' : 'Register Doctor'}
-          </Button>
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Registering Doctor...
+              </span>
+            ) : 'Register Doctor'}
+          </button>
         </form>
       </div>
     </div>

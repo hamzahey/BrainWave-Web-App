@@ -119,70 +119,80 @@ export default function DoctorManagement() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-[#f8f9fa] p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Doctor Management</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-[#0b021e]">Doctor Management</h1>
+        </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-[#0b021e]/10">
           <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <Input
-              label="Search by Registration Number"
-              value={searchReg}
-              onChange={(e) => setSearchReg(e.target.value)}
-              placeholder="Enter registration number"
-              className="flex-grow text-black"
-            />
-            <Button onClick={searchDoctor} className="h-[42px] mt-auto">
+            <div className="flex-grow">
+              <label className="block text-sm font-medium text-[#0b021e] mb-1">Search by Registration Number</label>
+              <input
+                type="text"
+                value={searchReg}
+                onChange={(e) => setSearchReg(e.target.value)}
+                placeholder="Enter registration number"
+                className="w-full px-4 py-2 border border-[#0b021e]/20 rounded-lg focus:ring-2 focus:ring-[#0b021e]/50 focus:border-[#0b021e]/50 text-[#0b021e]"
+              />
+            </div>
+            <button 
+              onClick={searchDoctor}
+              className="bg-[#0b021e] hover:bg-[#1a093a] text-white px-4 py-2 rounded-lg h-[42px] mt-auto transition-colors shadow-sm hover:shadow-md"
+            >
               Search
-            </Button>
-            <Button onClick={fetchDoctors} className="h-[42px] mt-auto">
+            </button>
+            <button 
+              onClick={fetchDoctors}
+              className="bg-white border border-[#0b021e] text-[#0b021e] hover:bg-[#0b021e]/5 px-4 py-2 rounded-lg h-[42px] mt-auto transition-colors shadow-sm hover:shadow-md"
+            >
               Show All
-            </Button>
+            </button>
           </div>
-
+  
           {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg border border-red-200">
               {error}
             </div>
           )}
-
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white">
-              <thead>
-                <tr className="bg-gray-200 text-gray-700">
-                  <th className="py-3 px-4 text-left">Reg. Number</th>
-                  <th className="py-3 px-4 text-left">Name</th>
-                  <th className="py-3 px-4 text-left">Email</th>
-                  <th className="py-3 px-4 text-left">Specialization</th>
-                  <th className="py-3 px-4 text-left">Department</th>
-                  <th className="py-3 px-4 text-left">Actions</th>
+  
+          <div className="overflow-x-auto rounded-lg border border-[#0b021e]/10">
+            <table className="min-w-full">
+              <thead className="bg-[#0b021e]/5">
+                <tr>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-[#0b021e]">Reg. Number</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-[#0b021e]">Name</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-[#0b021e]">Email</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-[#0b021e]">Specialization</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-[#0b021e]">Department</th>
+                  <th className="py-3 px-4 text-left text-sm font-semibold text-[#0b021e]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="text-gray-600">
+              <tbody className="divide-y divide-[#0b021e]/10">
                 {doctors.map((doctor) => (
-                  <tr key={doctor.registrationNumber} className="border-b border-gray-200 hover:bg-gray-50">
-                    <td className="py-3 px-4">{doctor.registrationNumber}</td>
-                    <td className="py-3 px-4">{getUserName(doctor)}</td>
-                    <td className="py-3 px-4">{getUserEmail(doctor)}</td>
-                    <td className="py-3 px-4">{doctor.specialization || 'N/A'}</td>
-                    <td className="py-3 px-4">{doctor.department || 'N/A'}</td>
+                  <tr key={doctor.registrationNumber} className="hover:bg-[#0b021e]/5">
+                    <td className="py-3 px-4 text-sm text-[#0b021e] font-medium">{doctor.registrationNumber}</td>
+                    <td className="py-3 px-4 text-sm text-[#0b021e]">{getUserName(doctor)}</td>
+                    <td className="py-3 px-4 text-sm text-[#0b021e]">{getUserEmail(doctor)}</td>
+                    <td className="py-3 px-4 text-sm text-[#0b021e] capitalize">{doctor.specialization || 'N/A'}</td>
+                    <td className="py-3 px-4 text-sm text-[#0b021e] capitalize">{doctor.department || 'N/A'}</td>
                     <td className="py-3 px-4">
-                      <Button
-                       
+                      <button
                         onClick={() => deleteDoctor(doctor.registrationNumber)}
-                        className="py-1 px-3 text-sm"
+                        className="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-lg text-sm font-medium transition-colors"
                       >
                         Delete
-                      </Button>
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
+  
           {doctors.length === 0 && !loading && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-[#0b021e]/50">
               No doctors found
             </div>
           )}

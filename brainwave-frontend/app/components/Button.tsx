@@ -1,10 +1,8 @@
-
-
 import React, { ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  fullWidth?: boolean; // Optional fullWidth prop
+  fullWidth?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({ 
@@ -16,9 +14,12 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={`px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition ${
-        fullWidth ? 'w-full' : ''
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+      className={`px-6 py-3 font-semibold rounded-xl transition-all duration-200
+        bg-[#0b021e] text-white hover:bg-[#1a093a] hover:shadow-lg
+        focus:outline-none focus:ring-4 focus:ring-[#0b021e]/30
+        ${fullWidth ? 'w-full' : ''} 
+        ${disabled ? 'opacity-60 cursor-not-allowed hover:bg-[#0b021e]' : ''}
+        ${className}`}
       disabled={disabled}
       {...props}
     >

@@ -42,51 +42,55 @@ export default function InferencePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="bg-white shadow-2xl rounded-2xl p-8 border border-gray-100">
+          <h1 className="text-4xl font-extrabold text-[#0b021e] text-center mb-10">
             EEG Prognosis Prediction
           </h1>
-
-          <div className="space-y-8">
+  
+          <div className="space-y-10">
             {/* File Upload Section */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div
                 {...getRootProps()}
-                className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors
-                  ${isDragActive ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"}
+                className={`border-2 border-dashed rounded-2xl p-10 text-center transition-all duration-200 cursor-pointer
+                  ${
+                    isDragActive
+                      ? "border-[#0b021e] bg-[#0b021e0d]" // Slight tint
+                      : "border-gray-300 hover:border-[#0b021e]"
+                  }
                   ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <input {...getInputProps()} disabled={isLoading} />
-                <div className="space-y-2">
-                  <div className="text-gray-600">
-                    {isDragActive ? (
-                      "Drop ZIP file here"
-                    ) : (
-                      <>
-                        <p>Drag & drop EEG data ZIP file here</p>
-                        <p className="text-sm text-gray-500 mt-1">or click to browse</p>
-                      </>
-                    )}
-                  </div>
-                  {file && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      Selected file: <span className="font-medium">{file.name}</span>
-                    </p>
+                <div className="text-gray-600">
+                  {isDragActive ? (
+                    <p className="font-medium text-[#0b021e]">Drop ZIP file here</p>
+                  ) : (
+                    <>
+                      <p className="text-lg font-medium">Drag & drop EEG data ZIP file here</p>
+                      <p className="text-sm text-gray-500 mt-1">or click to browse</p>
+                    </>
                   )}
                 </div>
+                {file && (
+                  <p className="text-sm text-gray-700 mt-3">
+                    Selected file:{" "}
+                    <span className="font-semibold text-[#0b021e]">{file.name}</span>
+                  </p>
+                )}
               </div>
-
+  
               <button
                 onClick={handleInference}
                 disabled={isLoading || !file}
-                className={`w-full py-3 rounded-xl font-medium transition-all
-                  ${isLoading || !file
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"}
-                  flex items-center justify-center gap-2`}
+                className={`w-full py-3 text-lg rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-3
+                  ${
+                    isLoading || !file
+                      ? "bg-gray-300 text-gray-700 cursor-not-allowed"
+                      : "bg-[#0b021e] hover:bg-[#120431] text-white shadow-md"
+                  }`}
               >
                 {isLoading ? (
                   <>
@@ -98,52 +102,59 @@ export default function InferencePage() {
                 )}
               </button>
             </div>
-
+  
             {/* Error Display */}
             {error && (
-              <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
-                <h3 className="text-red-800 font-medium">Error</h3>
-                <p className="text-red-700 text-sm mt-1">{error}</p>
+              <div className="bg-red-100 border border-red-300 text-red-800 px-6 py-4 rounded-xl">
+                <h3 className="font-semibold text-lg">⚠️ Error</h3>
+                <p className="text-sm mt-1">{error}</p>
               </div>
             )}
-
+  
             {/* Results Display */}
             {results && (
               <div className="space-y-6">
-                <h2 className="text-xl font-semibold text-gray-800">Analysis Results</h2>
-                <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-[#0b021e] border-b pb-2">
+                  Analysis Results
+                </h2>
+  
+                <div className="space-y-5">
                   {results.map((patient, index) => (
-                    <div 
+                    <div
                       key={patient.patient_id}
-                      className="bg-gray-50 p-4 rounded-lg border border-gray-200"
+                      className="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-sm"
                     >
-                      <h3 className="font-medium text-gray-800 mb-2">
+                      <h3 className="text-lg font-semibold text-[#0b021e] mb-3">
                         Patient: {patient.patient_id}
                       </h3>
-                      
+  
                       {patient.error ? (
-                        <div className="text-red-600 text-sm">
+                        <p className="text-sm text-red-600 font-medium">
                           Error: {patient.error}
-                        </div>
+                        </p>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div>
-                            <span className="text-gray-600">Prognosis:</span>
-                            <span className={`ml-2 font-semibold ${
-                              patient.outcome ? "text-green-600" : "text-red-600"
-                            }`}>
+                            <span className="text-gray-500">Prognosis:</span>
+                            <span
+                              className={`ml-2 font-semibold ${
+                                patient.outcome
+                                  ? "text-green-600"
+                                  : "text-red-600"
+                              }`}
+                            >
                               {patient.outcome ? "Good Outcome" : "Poor Outcome"}
                             </span>
                           </div>
                           <div>
-                            <span className="text-gray-600">Confidence:</span>
-                            <span className="ml-2 font-semibold text-gray-800">
+                            <span className="text-gray-500">Confidence:</span>
+                            <span className="ml-2 font-semibold text-[#0b021e]">
                               {(patient.outcome_probability! * 100).toFixed(1)}%
                             </span>
                           </div>
                           <div>
-                            <span className="text-gray-600">CPC Score:</span>
-                            <span className="ml-2 font-semibold text-gray-800">
+                            <span className="text-gray-500">CPC Score:</span>
+                            <span className="ml-2 font-semibold text-[#0b021e]">
                               {patient.cpc}
                             </span>
                           </div>
@@ -159,4 +170,5 @@ export default function InferencePage() {
       </div>
     </div>
   );
+  
 }
